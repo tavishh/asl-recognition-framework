@@ -35,8 +35,8 @@ import java.util.function.Consumer;
  */
 public class MobileServer {
 
-  public static final int HTTP_PORT = 8080;
-  public static final int WS_PORT   = 8081;
+  public static final int HTTP_PORT = 8090;
+  public static final int WS_PORT   = 8091;
 
   private final GestureLibrary        library;
   private final Consumer<String>      onMessage;   // forward to BattleServer
@@ -69,11 +69,21 @@ public class MobileServer {
     httpServer = HttpServer.create(new InetSocketAddress(HTTP_PORT), 0);
 
     httpServer.createContext("/", exchange -> {
-      byte[] page = buildMobilePage();
-      exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
-      exchange.sendResponseHeaders(200, page.length);
-      try (OutputStream os = exchange.getResponseBody()) {
-        os.write(page);
+      try {
+        byte[] page = buildMobilePage();
+        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+        exchange.sendResponseHeaders(200, page.length);
+        try (OutputStream os = exchange.getResponseBody()) {
+          os.write(page);
+        }
+      } catch (Exception e) {
+        String error = "Error: " + e.getMessage();
+        System.err.println("[MobileServer] HTTP error: " + e.getMessage());
+        byte[] bytes = error.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(500, bytes.length);
+        try (OutputStream os = exchange.getResponseBody()) {
+          os.write(bytes);
+        }
       }
     });
 
@@ -97,13 +107,15 @@ public class MobileServer {
     String refData = buildReferenceDataJS();
 
     // Inject constants just before </script>
-    String injection = "\nconst WS_HOST = \"" + BattleServer.getLocalIP() + "\";\n"
+    String injection = "const WS_HOST = \"" + BattleServer.getLocalIP() + "\";\n"
         + "const WS_PORT = " + WS_PORT + ";\n"
         + refData + "\n";
 
-    // Insert after <script type="module">
-    html = html.replace("<script type=\"module\">",
-        "<script type=\"module\">\n" + injection);
+    // ES modules require import at top — inject after the import statement
+    html = html.replace(
+        "from \"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/vision_bundle.js\";",
+        "from \"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/vision_bundle.js\";\n"
+            + injection);
 
     return html.getBytes(StandardCharsets.UTF_8);
   }
