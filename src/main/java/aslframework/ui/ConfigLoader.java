@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * Loads local configuration from {@code config.properties} at the project root.
  *
- * <p>Only {@code camera.url} needs to be configured per machine.
+ * <p>Only {@code camera.url} and {@code python.path} need to be configured per machine.
  * All other paths are resolved relative to the project root automatically.
  */
 public class ConfigLoader {
@@ -19,7 +19,7 @@ public class ConfigLoader {
   /**
    * Constructs a {@code ConfigLoader} and reads {@code config.properties}
    * from the current working directory if it exists.
-   * The file is optional — only needed if camera.url is used.
+   * The file is optional — only needed if camera.url or python.path is used.
    */
   public ConfigLoader() {
     File file = new File(CONFIG_FILE);
@@ -62,6 +62,18 @@ public class ConfigLoader {
    */
   public String getCameraUrl() {
     String value = props.getProperty("camera.url");
+    if (value == null || value.isBlank()) return null;
+    return value.trim();
+  }
+
+  /**
+   * Returns the path to the Python executable, or null if not configured.
+   * When null, the system python3 will be used automatically.
+   *
+   * @return value of {@code python.path}, or null if not set
+   */
+  public String getPythonPath() {
+    String value = props.getProperty("python.path");
     if (value == null || value.isBlank()) return null;
     return value.trim();
   }

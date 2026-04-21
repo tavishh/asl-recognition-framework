@@ -34,8 +34,9 @@ public class LandmarkBridge {
    * @throws LandmarkBridgeException if the subprocess fails to start or a camera error occurs
    */
   public LandmarkBridge() throws LandmarkBridgeException {
+    String python = resolvePython();
     try {
-      ProcessBuilder pb = new ProcessBuilder("/Users/chengchijiang/CodingEnvironment/mediapipe-venv/bin/python3", SCRIPT_PATH, "--headless");
+      ProcessBuilder pb = new ProcessBuilder(python, SCRIPT_PATH, "--headless");
       pb.redirectErrorStream(false);
       this.process = pb.start();
       this.stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -43,6 +44,33 @@ public class LandmarkBridge {
     } catch (IOException e) {
       throw new LandmarkBridgeException("Failed to start landmark extractor: " + e.getMessage(), e);
     }
+  }
+
+  /**
+   * Resolves the Python executable to use.
+   * Checks config.properties first, then falls back to system python3/python.
+   *
+   * @return path to the Python executable
+   */
+  private static String resolvePython() {
+    // 1. Check config.properties for python.path
+    try {
+      aslframework.ConfigLoader config = new aslframework.ConfigLoader();
+      String path = config.getPythonPath();
+      if (path != null) return path;
+    } catch (Exception ignored) {}
+
+    // 2. Try python3 from PATH
+    for (String candidate : new String[]{"python3", "python"}) {
+      try {
+        Process p = new ProcessBuilder(candidate, "--version").start();
+        p.waitFor();
+        if (p.exitValue() == 0) return candidate;
+      } catch (Exception ignored) {}
+    }
+
+    // 3. Default fallback
+    return "python3";
   }
 
   /**
