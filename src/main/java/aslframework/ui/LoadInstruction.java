@@ -70,8 +70,6 @@ public class LoadInstruction {
             "-fx-border-radius: 4;" +
             "-fx-background-radius: 4;"
     );
-
-    // Size is set externally via setFixedSize() after the scene is shown
   }
 
   // ── Public API ────────────────────────────────────────────────────────────────
@@ -113,7 +111,7 @@ public class LoadInstruction {
   public void load(String letter) {
     disposeCurrent();
 
-    File videoFile = new File(videoDir + letter.toLowerCase() + ".mp4");
+    File videoFile = new File(videoDir, letter.toLowerCase() + ".mp4");
     if (!videoFile.exists()) {
       System.err.println("[LoadInstruction] Video not found: " + videoFile.getAbsolutePath());
       mediaView.setVisible(false);
@@ -123,22 +121,20 @@ public class LoadInstruction {
 
     Media media = new Media(videoFile.toURI().toString());
     mediaPlayer = new MediaPlayer(media);
-    mediaPlayer.setCycleCount(1);        // play exactly once
+    mediaPlayer.setCycleCount(1);
     mediaPlayer.setStopTime(media.getDuration().isUnknown()
         ? javafx.util.Duration.INDEFINITE
-        : media.getDuration());          // hard stop at end
+        : media.getDuration());
 
     mediaView.setMediaPlayer(mediaPlayer);
     mediaView.setVisible(true);
     replayButton.setVisible(false);
 
-    // When duration is known, set hard stop time
     mediaPlayer.setOnReady(() ->
         mediaPlayer.setStopTime(mediaPlayer.getMedia().getDuration()));
 
-    // Stop completely at end — do NOT seek or loop, just show replay button
     mediaPlayer.setOnEndOfMedia(() -> {
-      mediaPlayer.stop();               // explicit stop prevents any re-trigger
+      mediaPlayer.stop();
       replayButton.setVisible(true);
     });
 
@@ -157,7 +153,6 @@ public class LoadInstruction {
     if (mediaPlayer != null) {
       replayButton.setVisible(false);
       mediaPlayer.seek(Duration.ZERO);
-      // Re-register end handler since stop() clears internal state on some JFX versions
       mediaPlayer.setOnEndOfMedia(() -> {
         mediaPlayer.stop();
         replayButton.setVisible(true);

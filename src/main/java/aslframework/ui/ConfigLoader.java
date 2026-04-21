@@ -8,12 +8,8 @@ import java.util.Properties;
 /**
  * Loads local configuration from {@code config.properties} at the project root.
  *
- * <p>{@code config.properties} is listed in {@code .gitignore} so each developer
- * maintains their own copy with paths specific to their machine. A template is
- * provided at {@code config.properties.template}.
- *
- * <p>If a key is missing or the file cannot be read, a clear error is thrown
- * at startup rather than failing silently later.
+ * <p>Only {@code camera.url} needs to be configured per machine.
+ * All other paths are resolved relative to the project root automatically.
  */
 public class ConfigLoader {
 
@@ -22,41 +18,40 @@ public class ConfigLoader {
 
   /**
    * Constructs a {@code ConfigLoader} and reads {@code config.properties}
-   * from the current working directory (project root when run via Maven).
-   *
-   * @throws RuntimeException if the file is missing or cannot be read
+   * from the current working directory if it exists.
+   * The file is optional — only needed if camera.url is used.
    */
   public ConfigLoader() {
     File file = new File(CONFIG_FILE);
-    if (!file.exists()) {
-      throw new RuntimeException(
-          "config.properties not found at: " + file.getAbsolutePath() + "\n" +
-              "Copy config.properties.template to config.properties and fill in your paths."
-      );
-    }
-    try (FileInputStream fis = new FileInputStream(file)) {
-      props.load(fis);
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to read config.properties: " + e.getMessage(), e);
+    if (file.exists()) {
+      try (FileInputStream fis = new FileInputStream(file)) {
+        props.load(fis);
+      } catch (IOException e) {
+        System.err.println("Warning: could not read config.properties: " + e.getMessage());
+      }
     }
   }
 
   /**
    * Returns the absolute path to the OpenCV native library.
+   * Resolved from lib/ in the project root.
    *
-   * @return value of {@code opencv.lib.path}
+   * @return absolute path to libopencv_java4130.dylib
    */
   public String getOpenCvLibPath() {
-    return require("opencv.lib.path");
+    return new File(System.getProperty("user.dir"), "lib/libopencv_java4130.dylib")
+        .getAbsolutePath();
   }
 
   /**
    * Returns the absolute path to the instruction video directory.
+   * Resolved from assets/guidance/ in the project root.
    *
-   * @return value of {@code video.dir}
+   * @return absolute path to the guidance video folder
    */
   public String getVideoDir() {
-    return require("video.dir");
+    return new File(System.getProperty("user.dir"), "assets/guidance")
+        .getAbsolutePath();
   }
 
   /**
@@ -68,18 +63,6 @@ public class ConfigLoader {
   public String getCameraUrl() {
     String value = props.getProperty("camera.url");
     if (value == null || value.isBlank()) return null;
-    return value.trim();
-  }
-
-  // ── Private ─────────────────────────────────────────────────────────────────────────────
-
-  private String require(String key) {
-    String value = props.getProperty(key);
-    if (value == null || value.isBlank()) {
-      throw new RuntimeException(
-          "Missing required property '" + key + "' in config.properties"
-      );
-    }
     return value.trim();
   }
 }
