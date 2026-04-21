@@ -1,6 +1,6 @@
 package aslframework.game.session;
 
-import aslframework.game.round.BattleRound;
+
 import aslframework.game.result.GameResult;
 import aslframework.persistence.AttemptRecord;
 
@@ -54,36 +54,5 @@ public interface GameEventListener {
    */
   void onSessionFinished(GameResult result);
 
-  // ── Battle-specific events ───────────────────────────────────────────────────
 
-  /**
-   * Fired when a new battle round opens.
-   *
-   * @param round          the newly opened round
-   * @param activePlayers  IDs of players still in the game
-   */
-  void onRoundOpened(BattleRound round, List<String> activePlayers);
-
-  /**
-   * Fired when a battle round closes (all active players have submitted).
-   *
-   * @param round            the round that just closed
-   * @param eliminatedThisRound player IDs eliminated in this round
-   */
-  void onRoundClosed(BattleRound round, List<String> eliminatedThisRound);
-
-  /**
-   * Fired when a player is eliminated.
-   *
-   * @param playerId     the eliminated player's ID
-   * @param roundCleared number of rounds they survived
-   */
-  void onPlayerEliminated(String playerId, int roundCleared);
-
-  /**
-   * Fired when winner(s) are declared.
-   *
-   * @param winners list of winning player IDs (multiple = joint win)
-   */
-  void onWinnersDeclared(List<String> winners);
 }

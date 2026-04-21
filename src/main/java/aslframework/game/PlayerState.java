@@ -11,7 +11,6 @@ import java.util.List;
  *
  * <p>Records every attempt and counts successful rounds cleared.
  * Mode-specific behaviour (e.g. elimination in battle mode) lives in
- * {@link BattlePlayerState}, which extends this class.
  */
 public class PlayerState {
 

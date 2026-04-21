@@ -1,6 +1,6 @@
 package aslframework.game.session;
 
-import aslframework.game.round.BattleRound;
+
 import aslframework.game.result.GameResult;
 import aslframework.persistence.AttemptRecord;
 
@@ -27,8 +27,5 @@ public class NoOpGameEventListener implements GameEventListener {
   @Override public void onAttempt(String l, AttemptRecord r, int streak) {}
   @Override public void onLetterCleared(String l, int ls, int ts) {}
   @Override public void onSessionFinished(GameResult result) {}
-  @Override public void onRoundOpened(BattleRound round, List<String> active) {}
-  @Override public void onRoundClosed(BattleRound round, List<String> eliminated) {}
-  @Override public void onPlayerEliminated(String playerId, int roundCleared) {}
-  @Override public void onWinnersDeclared(List<String> winners) {}
+
 }

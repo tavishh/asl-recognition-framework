@@ -41,18 +41,4 @@ public final class GameSessionFactory {
     return new PracticeSession(recognizer, library, playerId);
   }
 
-  /**
-   * Creates a multi-player battle session.
-   *
-   * @param recognizer the gesture recognizer backend
-   * @param library    the loaded gesture library
-   * @param playerIds  unique IDs for all participants (minimum 2)
-   * @return a ready-to-use {@link BattleSession}
-   */
-  public static BattleSession startBattle(GestureRecognizer recognizer,
-                                           GestureLibrary library,
-                                           List<String> playerIds) {
-    System.out.println("[Factory] BATTLE for: " + playerIds);
-    return new BattleSession(recognizer, library, playerIds);
-  }
 }

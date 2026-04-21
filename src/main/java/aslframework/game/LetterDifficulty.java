@@ -13,8 +13,6 @@ import java.util.List;
  *   <li>Fine motor precision needed</li>
  * </ul>
  *
- * <p>Used by {@link BattleRound} to advance the challenge letter each round,
- * and by {@link PracticeSession} to optionally gate progression.
  */
 public enum LetterDifficulty {
 
