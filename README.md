@@ -13,7 +13,7 @@ This framework enables real-time ASL letter recognition (A-Z) through an interac
 - 7 rotation variants per letter for robust rotation-invariant recognition
 - Cosine similarity scoring for accurate gesture matching
 - Interactive UI with live camera feed and instruction videos
-- 38 comprehensive unit tests with edge case coverage
+- 71 comprehensive unit tests with edge case coverage
 
 ## Tech Stack
 
