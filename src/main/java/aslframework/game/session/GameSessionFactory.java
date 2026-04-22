@@ -3,25 +3,20 @@ package aslframework.game.session;
 import aslframework.recognition.GestureLibrary;
 import aslframework.recognition.GestureRecognizer;
 
-import java.util.List;
-
 /**
  * Factory for creating game sessions.
  *
  * <p>Returns the {@link GameSession} interface type so callers are fully
- * decoupled from the concrete implementations. Use {@link #startBattle}
- * when you need battle-specific methods (e.g. {@link BattleSession#submitAttempt}).
+ * decoupled from the concrete implementations.
  *
  * <h2>Usage</h2>
  * <pre>{@code
- * // UI only needs the interface
  * GameSession session = GameSessionFactory.startPractice(recognizer, library, "alice");
- *
- * // Battle controller needs the concrete type
- * BattleSession battle = GameSessionFactory.startBattle(recognizer, library,
- *     List.of("alice", "bob", "charlie"));
  * }</pre>
+ *
+ * <p><strong>Future work:</strong> Battle mode (multi-player) is deferred for a future release.
  */
+
 public final class GameSessionFactory {
 
   private GameSessionFactory() {}
@@ -37,7 +32,6 @@ public final class GameSessionFactory {
   public static GameSession startPractice(GestureRecognizer recognizer,
                                            GestureLibrary library,
                                            String playerId) {
-    System.out.println("[Factory] PRACTICE for: " + playerId);
     return new PracticeSession(recognizer, library, playerId);
   }
 

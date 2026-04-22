@@ -7,12 +7,15 @@ import java.util.List;
 /**
  * Persistence-layer representation of a user's learning progress.
  *
- * <p>This class is the data carrier loaded from and saved to the SQLite
- * database by {@link UserProgressDAO}. It holds the flat list of
- * {@link AttemptRecord}s exactly as stored in the {@code user_progress} table.
+ * <p>This class is the data carrier for user progress records. It holds the flat list of
+ * {@link AttemptRecord}s that would be stored in a database via future DAO implementation.
+ *
+ * <p><strong>Future work:</strong> {@code UserProgressDAO} (SQLite persistence layer) is
+ * deferred for a future release. Currently this class serves as the data model for
+ * in-memory progress tracking during active game sessions.
  *
  * <p>For in-session logic (scoring, level gating) use
- * {@link java.aslframework.core.UserProgress} instead, which wraps this object.
+ * {@link aslframework.core.UserProgress} instead, which wraps this object.
  *
  * <p>The list of attempts is exposed as an unmodifiable view to prevent
  * accidental external mutation.
@@ -78,7 +81,7 @@ public class UserProgress {
 
   /**
    * Increments the completed-level counter by one.
-   * Called by {@link java.aslframework.game.LearningSession} when an attempt passes.
+   * Called by {@link aslframework.game.session.PracticeSession} when an attempt passes.
    */
   public void incrementLevel() { levelsCompleted++; }
 }

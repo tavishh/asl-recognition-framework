@@ -85,20 +85,6 @@
         <configuration>
           <source>17</source>
           <target>17</target>
-          <excludes>
-            <!-- Not in use yet — files kept, compilation skipped -->
-            <exclude>aslframework/ui/WordShooterGame.java</exclude>
-            <exclude>aslframework/ui/Open.java</exclude>
-            <exclude>aslframework/ui/network/BattleClient.java</exclude>
-            <exclude>aslframework/ui/network/BattleServer.java</exclude>
-            <exclude>aslframework/ui/network/MobileServer.java</exclude>
-            <exclude>aslframework/ui/network/NetworkedBattleUI.java</exclude>
-            <exclude>aslframework/ui/network/QRCodeGenerator.java</exclude>
-            <exclude>aslframework/game/BattlePlayerState.java</exclude>
-            <exclude>aslframework/game/result/BattleResult.java</exclude>
-            <exclude>aslframework/game/round/BattleRound.java</exclude>
-            <exclude>aslframework/game/session/BattleSession.java</exclude>
-          </excludes>
         </configuration>
       </plugin>
 
@@ -109,9 +95,9 @@
         <version>0.0.8</version>
         <configuration>
           <mainClass>aslframework.Main</mainClass>
-          <jvmArguments>
-            <jvmArgument>-Djava.library.path=${project.basedir}/lib</jvmArgument>
-          </jvmArguments>
+          <options>
+            <option>-Djava.library.path=${project.basedir}/lib</option>
+          </options>
         </configuration>
       </plugin>
 
