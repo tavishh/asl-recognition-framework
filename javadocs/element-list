@@ -1,0 +1,11 @@
+aslframework
+aslframework.core
+aslframework.game
+aslframework.game.progression
+aslframework.game.result
+aslframework.game.scoring
+aslframework.game.session
+aslframework.model
+aslframework.persistence
+aslframework.recognition
+aslframework.ui
